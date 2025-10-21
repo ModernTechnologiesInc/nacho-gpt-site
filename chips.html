@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Chips - NachoGPT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #082080 0%, #6090FF 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 600px;
+        }
+        
+        .emoji {
+            font-size: 120px;
+            margin-bottom: 30px;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        p {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .features {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 40px 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .features h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .features ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .features li {
+            font-size: 1.1rem;
+            margin: 15px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .features li:before {
+            content: '🌮';
+            position: absolute;
+            left: 0;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+        
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: white;
+            color: #082080;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .current-workaround {
+            background: rgba(255, 255, 255, 0.15);
+            border-left: 4px solid white;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 8px;
+            text-align: left;
+        }
+        
+        .current-workaround h3 {
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .emoji {
+                font-size: 80px;
+            }
+            
+            p {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="emoji">🌮</div>
+        <h1>Chip Marketplace Coming Soon!</h1>
+        <p>We're building a web-based chip sharing platform where you can discover, share, and install prompt collections with one click.</p>
+        
+        <div class="features">
+            <h2>What's Coming:</h2>
+            <ul>
+                <li>Browse community-created chips by category</li>
+                <li>One-click chip installation</li>
+                <li>Share your chips with custom URLs</li>
+                <li>Upvote and favorite the best chips</li>
+                <li>Track download counts and popularity</li>
+            </ul>
+        </div>
+        
+        <div class="current-workaround">
+            <h3>📦 For Now: File-Based Sharing</h3>
+            <p>You can already share chips using the Export/Import feature:</p>
+            <p><strong>1.</strong> Click "Export Chip" to save a .chip file<br>
+            <strong>2.</strong> Share the file via email, Slack, or Discord<br>
+            <strong>3.</strong> Others click "Import Chip" to load it</p>
+        </div>
+        
+        <div class="cta-buttons">
+            <a href="/" class="btn btn-primary">
+                ← Back to Home
+            </a>
+            <a href="https://twitter.com/NachoGPT" class="btn btn-secondary" target="_blank" rel="noopener">
+                Get Notified on Twitter
+            </a>
+        </div>
+        
+        <p style="margin-top: 40px; opacity: 0.7; font-size: 0.9rem;">
+            Expected launch: v0.4.0 (2-3 weeks after initial release)
+        </p>
+    </div>
+</body>
+</html>
