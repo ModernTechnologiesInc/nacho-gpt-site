@@ -1,0 +1,79 @@
+{
+  "manifest_version": 3,
+  "name": "NachoGPT",
+  "version": "0.3.1",
+  "description": "🌮 Spice up your AI chats with quick prompts! Master prompts, shareable Chips, and quick switching.",
+  "permissions": [
+    "storage","tabs"
+  ],
+  "host_permissions": [
+    "https://chat.openai.com/*",
+    "https://chatgpt.com/*",
+    "https://claude.ai/*",
+    "https://gemini.google.com/*",
+    "https://grok.com/*",
+    "https://x.com/*",
+    "https://copilot.microsoft.com/*",
+    "https://you.com/*",
+    "https://poe.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    },
+    "default_title": "NachoGPT - Quick AI Prompts"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chat.openai.com/*",
+        "https://chatgpt.com/*",
+        "https://claude.ai/*",
+        "https://gemini.google.com/*",
+        "https://grok.com/*",
+        "https://x.com/*",
+        "https://copilot.microsoft.com/*",
+        "https://you.com/*",
+        "https://poe.com/*"
+      ],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "commands": {
+    "toggle-master-prompts": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+M",
+        "mac": "Command+Shift+M",
+        "windows": "Ctrl+Shift+M",
+        "linux": "Ctrl+Shift+M"
+      },
+      "description": "Toggle master prompts bar"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "nachogpt@nachogpt.com",
+      "strict_min_version": "109.0"
+    }
+  }
+}

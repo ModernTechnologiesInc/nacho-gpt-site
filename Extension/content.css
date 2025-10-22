@@ -1,0 +1,245 @@
+/* ============================================================================
+   NachoGPT Master Prompts Bar - Injected Styles
+   ============================================================================ */
+
+#nachogpt-master-bar {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #082080 0%, #6090FF 100%);
+    padding: 12px 20px;
+    border-radius: 0 0 16px 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    z-index: 999999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    min-width: 300px;
+    max-width: 90vw;
+}
+
+#nachogpt-master-bar.nachogpt-hidden {
+    transform: translateX(-50%) translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+#nachogpt-master-bar.nachogpt-visible {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.nachogpt-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+    user-select: none;
+}
+
+.nachogpt-logo {
+    font-weight: bold;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+.nachogpt-settings,
+.nachogpt-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.1s;
+    padding: 0;
+    line-height: 1;
+}
+
+.nachogpt-settings:hover,
+.nachogpt-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.nachogpt-settings:active,
+.nachogpt-close:active {
+    transform: scale(0.95);
+}
+
+.nachogpt-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.nachogpt-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: #fff;
+    font-weight: bold;
+    font-size: 18px;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+}
+
+.nachogpt-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.nachogpt-btn:active {
+    transform: translateY(0);
+}
+
+.nachogpt-btn:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 2px;
+}
+
+/* Prevent text selection on buttons */
+.nachogpt-btn::selection {
+    background: transparent;
+}
+
+/* Animation for bar appearance */
+@keyframes slideDown {
+    from {
+        transform: translateX(-50%) translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Notification animations */
+@keyframes slideInRight {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Make sure bar appears above everything */
+#nachogpt-master-bar {
+    isolation: isolate;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #nachogpt-master-bar {
+        padding: 10px 15px;
+        min-width: 250px;
+    }
+    
+    .nachogpt-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+    }
+    
+    .nachogpt-buttons {
+        gap: 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    #nachogpt-master-bar {
+        padding: 8px 12px;
+        min-width: 200px;
+    }
+    
+    .nachogpt-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+    }
+    
+    .nachogpt-logo {
+        font-size: 12px;
+    }
+    
+    .nachogpt-settings,
+    .nachogpt-close {
+        width: 24px;
+        height: 24px;
+        font-size: 16px;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    #nachogpt-master-bar {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    #nachogpt-master-bar,
+    .nachogpt-btn {
+        transition: none;
+    }
+    
+    @keyframes slideDown {
+        from, to {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    #nachogpt-master-bar {
+        border: 2px solid #fff;
+    }
+    
+    .nachogpt-btn {
+        border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+}

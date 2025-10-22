@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NachoGPT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 400px;
+            min-height: 500px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, var(--color1, #082080) 0%, var(--color2, #6090FF) 100%);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .header {
+            padding: 20px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header .tagline {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: #fff;
+            font-size: 14px;
+            transition: background 0.2s;
+            font-family: inherit;
+        }
+
+        .tab:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .tab.active {
+            background: rgba(255, 255, 255, 0.2);
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .master-prompts {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .master-btn {
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 18px;
+            font-family: inherit;
+        }
+
+        .master-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .master-btn:active {
+            transform: translateY(0);
+        }
+
+        .prompt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chip-group {
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            padding: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .chip-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .chip-header:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .chip-title {
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .chip-count {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .chip-actions {
+            display: flex;
+            gap: 8px;
+            margin-left: 10px;
+        }
+
+        .chip-prompts {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .chip-prompts.collapsed {
+            display: none;
+        }
+
+        .chip-prompt-item {
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-left: 12px;
+        }
+
+        .chip-prompt-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .prompt-item {
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .prompt-item:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .prompt-title {
+            font-weight: 500;
+            flex: 1;
+            cursor: pointer;
+            word-break: break-word;
+        }
+
+        .prompt-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .btn-icon {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #fff;
+            font-size: 12px;
+            font-family: inherit;
+            line-height: 1;
+            transition: background 0.2s;
+        }
+
+        .btn-icon:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .add-btn {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px dashed rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .add-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 350px;
+            color: #333;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .modal-content input,
+        .modal-content textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .modal-content input:focus,
+        .modal-content textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .modal-content textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .quick-pick-edit-btn {
+            width: 100%;
+            padding: 16px 20px;
+            margin-bottom: 10px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            font-size: 15px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        .quick-pick-edit-btn:hover {
+            border-color: #082080;
+            background: linear-gradient(135deg, #082080 0%, #6090FF 100%);
+            color: white;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(8, 32, 128, 0.3);
+        }
+
+        .quick-pick-edit-btn .emoji {
+            font-size: 28px;
+            min-width: 40px;
+            text-align: center;
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 8px;
+            transition: all 0.2s;
+        }
+
+        .quick-pick-edit-btn:hover .emoji {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .quick-pick-edit-btn .details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .quick-pick-edit-btn .number {
+            font-size: 11px;
+            opacity: 0.6;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .quick-pick-edit-btn .title {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .quick-pick-edit-btn:hover .number {
+            opacity: 0.9;
+        }
+
+        .quick-pick-edit-btn::after {
+            content: '✏️';
+            font-size: 16px;
+            opacity: 0.3;
+            transition: all 0.2s;
+        }
+
+        .quick-pick-edit-btn:hover::after {
+            opacity: 1;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .btn-save {
+            background: #667eea;
+            color: #fff;
+        }
+
+        .btn-save:hover {
+            background: #5568d3;
+        }
+
+        .btn-cancel {
+            background: #ddd;
+            color: #333;
+        }
+
+        .btn-cancel:hover {
+            background: #ccc;
+        }
+
+        .shortcuts {
+            font-size: 12px;
+            opacity: 0.8;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+
+        .shortcuts div {
+            margin-bottom: 8px;
+        }
+
+        .shortcuts kbd {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            opacity: 0.7;
+        }
+
+        .empty-state .emoji {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Animations */
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        /* Utility classes */
+        .flex-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .mb-15 {
+            margin-bottom: 15px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🌮 Nacho-GPT</h1>
+        <div class="tagline">Share a Chip, Get a Chip!</div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" data-tab="master" type="button">⚡ Quick Pick</button>
+        <button class="tab" data-tab="prompts" type="button">🌮 Chips</button>
+        <button class="tab" data-tab="help" type="button">⚙️ About</button>
+    </div>
+
+    <div class="content">
+        <!-- Master Prompts Section -->
+        <div class="section active" id="master-section">
+            <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 10px;">
+                <button id="quickPickSettingsBtn" type="button" style="background: rgba(255,255,255,0.2); border: none; color: white; font-size: 18px; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; transition: background 0.2s;" title="Settings">⚙️</button>
+            </div>
+            <div class="master-prompts" id="masterPrompts"></div>
+        </div>
+
+        <!-- Project Prompts Section -->
+        <div class="section" id="prompts-section">
+            <div class="flex-row mb-15">
+                <button class="add-btn" id="addPromptBtn" type="button" style="flex: 1;">+ Add Prompt</button>
+                <button class="add-btn" id="addChipBtn" type="button" style="flex: 1;">🌮 New Chip</button>
+            </div>
+            <div class="flex-row mb-15">
+                <button class="add-btn" id="exportChipsBtn" type="button" style="flex: 1; background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.5);">📤 Export</button>
+                <button class="add-btn" id="importChipsBtn" type="button" style="flex: 1; background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.5);">📥 Import</button>
+            </div>
+            <input type="file" id="importFileInput" accept=".chip,.json" style="display: none;">
+            <div class="prompt-list" id="promptList"></div>
+        </div>
+
+        <!-- Help Section -->
+        <div class="section" id="help-section">
+            <div class="shortcuts">
+                <h3 style="margin-bottom: 10px;">💾 Storage Settings</h3>
+                <div id="storageIndicator" style="font-size: 13px; margin-bottom: 10px; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 6px;">
+                    ☁️ Sync Storage (100KB limit)
+                </div>
+                <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                    <label style="display: flex; align-items: center; flex: 1; cursor: pointer; padding: 8px; background: rgba(255,255,255,0.15); border-radius: 6px;">
+                        <input type="radio" name="storageMode" value="sync" id="storageSyncRadio" style="margin-right: 8px;">
+                        <span style="font-size: 12px;">☁️ Sync (Limited)</span>
+                    </label>
+                    <label style="display: flex; align-items: center; flex: 1; cursor: pointer; padding: 8px; background: rgba(255,255,255,0.15); border-radius: 6px;">
+                        <input type="radio" name="storageMode" value="local" id="storageLocalRadio" style="margin-right: 8px;">
+                        <span style="font-size: 12px;">💾 Local (Unlimited)</span>
+                    </label>
+                </div>
+                <button id="applyStorageBtn" type="button" style="width: 100%; padding: 10px; background: rgba(255,255,255,0.3); border: none; border-radius: 6px; color: white; cursor: pointer; font-family: inherit; font-weight: bold;">Apply & Migrate</button>
+                <p style="font-size: 11px; margin-top: 8px; opacity: 0.8;">
+                    <strong>Sync:</strong> Limited size, syncs across devices<br>
+                    <strong>Local:</strong> Unlimited size, this device only
+                </p>
+            </div>
+            
+            <div class="shortcuts" style="margin-top: 15px;">
+                <h3 style="margin-bottom: 10px;">🎨 Customize Colors</h3>
+                <div style="display: flex; gap: 10px; align-items: center; margin-top: 10px;">
+                    <label style="flex: 1;">Bar Color 1:</label>
+                    <input type="color" id="color1Picker" value="#082080" style="width: 60px; height: 30px; cursor: pointer; border-radius: 4px; border: none;">
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center; margin-top: 8px;">
+                    <label style="flex: 1;">Bar Color 2:</label>
+                    <input type="color" id="color2Picker" value="#6090FF" style="width: 60px; height: 30px; cursor: pointer; border-radius: 4px; border: none;">
+                </div>
+                <button id="resetColorsBtn" type="button" style="width: 100%; margin-top: 10px; padding: 8px; background: rgba(255,255,255,0.2); border: none; border-radius: 6px; color: white; cursor: pointer; font-family: inherit;">Reset to Default</button>
+            </div>
+            
+            <div class="shortcuts" style="margin-top: 15px;">
+                <h3 style="margin-bottom: 10px;">⌨️ Keyboard Shortcuts</h3>
+                <div><kbd>Ctrl+Shift+M</kbd> Open Nacho-GPT extension</div>
+                <p style="margin-top: 10px; font-size: 11px;">💡 Change at chrome://extensions/shortcuts</p>
+            </div>
+            
+            <div style="margin-top: 15px; font-size: 12px; opacity: 0.8;">
+                <h3 style="margin-bottom: 10px;">🎯 How to Use</h3>
+                <p style="margin-bottom: 8px;">1. Press Ctrl+Shift+M on AI sites to open extension</p>
+                <p style="margin-bottom: 8px;">2. Click Quick Pick buttons to edit prompts</p>
+                <p style="margin-bottom: 8px;">3. Click prompts in extension to insert into chat</p>
+                <p style="margin-bottom: 8px;">4. Create Chips to organize prompts by project</p>
+                <p style="margin-bottom: 8px;">5. Export & share .chip files with your team!</p>
+            </div>
+
+            <div style="margin-top: 15px; font-size: 12px; opacity: 0.8;">
+                <h3 style="margin-bottom: 10px;">🌮 Share a Chip!</h3>
+                <p style="margin-bottom: 8px;">1. Create a Chip (e.g., "Marketing Team")</p>
+                <p style="margin-bottom: 8px;">2. Add your best prompts to it</p>
+                <p style="margin-bottom: 8px;">3. Click 📤 Export to download .chip file</p>
+                <p style="margin-bottom: 8px;">4. Share file with teammates</p>
+                <p style="margin-bottom: 8px;">5. They click 📥 Import - done!</p>
+            </div>
+
+            <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.2); text-align: center;">
+                <p style="font-size: 13px; margin-bottom: 10px;">Follow us on X (Twitter)</p>
+                <a href="https://x.com/NachoGPT" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 8px 16px; background: rgba(255,255,255,0.2); border-radius: 8px; color: white; text-decoration: none; font-weight: bold; transition: background 0.2s;">
+                    𝕏 @NachoGPT
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Edit Prompt</h2>
+            <input type="text" id="promptTitle" placeholder="Prompt title" maxlength="100">
+            <input type="text" id="promptEmoji" placeholder="Button text (emoji or number)" maxlength="2" style="display: none;">
+            <textarea id="promptContent" placeholder="Prompt content" maxlength="5000"></textarea>
+            <div class="modal-buttons">
+                <button class="btn-cancel" id="cancelBtn" type="button">Cancel</button>
+                <button class="btn-save" id="saveBtn" type="button">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chip Modal -->
+    <div class="modal" id="chipModal">
+        <div class="modal-content">
+            <h2 id="chipModalTitle">Create Chip</h2>
+            <input type="text" id="chipName" placeholder="Chip name (e.g., 'Marketing Team')" maxlength="50">
+            <input type="text" id="chipEmoji" placeholder="Chip emoji (e.g., 📱)" maxlength="2">
+            <textarea id="chipDescription" placeholder="Description (optional)" style="min-height: 60px;" maxlength="200"></textarea>
+            <div class="modal-buttons">
+                <button class="btn-cancel" id="chipCancelBtn" type="button">Cancel</button>
+                <button class="btn-save" id="chipSaveBtn" type="button">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Pick Edit Modal -->
+    <div class="modal" id="quickPickModal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="margin: 0;">⚡ Edit Quick Pick</h2>
+                <button id="quickPickCloseBtn" type="button" style="background: transparent; border: none; color: #999; font-size: 24px; cursor: pointer; padding: 0; line-height: 1;">×</button>
+            </div>
+            <div id="quickPickList" style="max-height: 400px; overflow-y: auto; margin-bottom: 0; padding-right: 10px;">
+                <!-- Quick pick buttons will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
